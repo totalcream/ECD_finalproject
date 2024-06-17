@@ -152,15 +152,23 @@ void PORT_init() {
 
 void trigger_ultrasonic() {
     // Send a 10us pulse to trigger the ultrasonic sensor
-    PORTA.OUTSET = PIN0_bm;
+    PORTE.OUTSET = PIN0_bm | PIN2_bm;
     _delay_us(10);
-    PORTA.OUTCLR = PIN1_bm;
+    PORTE.OUTCLR = PIN1_bm | PIN3_bm;
 }
 
 uint8_t obstacle_detected() {
     trigger_ultrasonic();
 
     uint8_t det = 0;
+
+    while (!(PORTA.IN & PIN3_bm));
+    while (PORTA.IN & PIN3_bm);   
+    _delay_ms(10);                
+
+    if (PORTA.IN & PIN3_bm) {
+        det = 1;
+    }
 
     while (!(PORTA.IN & PIN1_bm));
     while (PORTA.IN & PIN1_bm);   
