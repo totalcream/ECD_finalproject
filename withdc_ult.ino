@@ -162,19 +162,19 @@ uint8_t obstacle_detected() {
 
     uint8_t det = 0;
 
-    while (!(PORTA.IN & PIN3_bm));
-    while (PORTA.IN & PIN3_bm);   
+    while (!(PORTE.IN & PIN3_bm));
+    while (PORTE.IN & PIN3_bm);   
     _delay_ms(10);                
 
-    if (PORTA.IN & PIN3_bm) {
+    if (PORTE.IN & PIN3_bm) {
         det = 1;
     }
 
-    while (!(PORTA.IN & PIN1_bm));
-    while (PORTA.IN & PIN1_bm);   
+    while (!(PORTE.IN & PIN1_bm));
+    while (PORTE.IN & PIN1_bm);   
     _delay_ms(10);                
 
-    if (PORTA.IN & PIN1_bm) {
+    if (PORTE.IN & PIN1_bm) {
         det = 1;
     }
     return det; 
