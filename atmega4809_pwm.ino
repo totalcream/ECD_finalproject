@@ -3,7 +3,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-
 // 타이머 카운터 관련 매크로
 #define TCA_CTRLA   TCA0.SPLIT.CTRLA
 #define TCA_CTRLB   TCA0.SPLIT.CTRLB
@@ -36,8 +35,8 @@
 
 // 서보모터 제어 관련 매크로
 #define MAX_ANGLE 25
-#define X_OFFSET -8
-#define Y_OFFSET 0
+#define X_OFFSET -6
+#define Y_OFFSET 1
 
 // PID 관련 제어 매크로
 #define DELTA_T 0.001
@@ -500,15 +499,15 @@ void setup() {
   ADC_init();
   ADC_start();
 
-  TCA_LCMP0 = move_Servo(0, true); // Initialize servo 1 to 0 degrees
-  TCA_LCMP1 = move_Servo(0, false); // Initialize servo 2 to 0 degrees
+  TCA_LCMP0 = move_Servo(X_OFFSET, true); // Initialize servo 1 to 0 degrees
+  TCA_LCMP1 = move_Servo(Y_OFFSET, false); // Initialize servo 2 to 0 degrees
 
   sei(); // 전역 인터럽트 허용
 }
 
 
 // PID 제어기 초기화
-struct PID pid_x = {3.0, 0.007, 0.02, 0.0, 0.0}; // PID parameters for X axis
+struct PID pid_x = {6.55/2, 0.007, 0.02, 0.0, 0.0}; // PID parameters for X axis
 struct PID pid_y = {6.55, 0.0065, 0.0525, 0.0, 0.0}; // PID parameters for Y axis
 
 
@@ -531,7 +530,7 @@ void loop() {
 
   float velocity_y = calculate_velocity(y, pre_y, DELTA_T);
 
-  // TODO : cal_pid_angle_x and y 값 구하기
+
   pi_x = (int)calculate_pid(&pid_x, setpoint_x, x, velocity_y);
   pi_y = (int)calculate_pid(&pid_y, setpoint_y, y, velocity_y);
 
@@ -556,7 +555,7 @@ void loop() {
   pre_x = x;
   pre_y = y;
   // step++;
-  TCB1.CCMPH = step;
+  // TCB1.CCMPH = step;
   if (step > 255)
     step = 160;
   // Transmit current angles and touch position
